@@ -42,11 +42,20 @@ src/
   storage.js              localStorage への保存・復元と、読み込み時の検証
   edit-keys.js            編集中のキー入力の振り分け(IME 変換中の除外)
 test/                     node:test によるテスト
-server.js                 ローカル確認用の静的ファイルサーバー(src/ のみ配信)
+dev-server.js             ローカル確認用の静的ファイルサーバー(src/ のみ配信)
+vercel.json               Vercel 用の設定(src/ を静的サイトとして公開)
+.github/workflows/        GitHub Pages へのデプロイ
 ```
 
 ロジックは DOM に依存しない純粋関数に分けてあり、`app.js` はそれらを呼び出して画面に反映するだけにしています。
 
+## デプロイ
+
+`src/` の中身だけを公開する静的サイトです(GitHub Pages / Vercel のどちらでも動きます)。
+
+- **Vercel**: `vercel.json` で「Other」プリセットと出力ディレクトリ `src` を指定しています。ビルドは不要です。
+- **`server.*` という名前のファイルを、ルートや `src/` に置かないでください。** Vercel はそれを Node.js サーバーと自動判定し、「The default export must be a function or server」でデプロイに失敗します。ローカル用のサーバーを `dev-server.js` にしているのはこのためです(`test/deploy-layout.test.js` で検知します)。
+
 ## テストの範囲
 
-`todo-list` / `filter` / `storage` / `edit-keys` / `server` は自動テストでカバーしています。`app.js`(DOM 操作)には自動テストがありません(DOM 環境の依存を増やさないため)。この部分は実ブラウザで次の点を手動確認しています: 追加・完了・編集(Enter / Esc / フォーカス喪失)・削除・一括完了・完了済み削除・絞り込みと再読み込み後の復元・壊れたデータの読み込み・保存失敗時の警告・ストレージがブロックされた環境での起動。
+`todo-list` / `filter` / `storage` / `edit-keys` / `dev-server` とデプロイ用のファイル構成は、自動テストでカバーしています。`app.js`(DOM 操作)には自動テストがありません(DOM 環境の依存を増やさないため)。この部分は実ブラウザで次の点を手動確認しています: 追加・完了・編集(Enter / Esc / フォーカス喪失)・削除・一括完了・完了済み削除・絞り込みと再読み込み後の復元・壊れたデータの読み込み・保存失敗時の警告・ストレージがブロックされた環境での起動。

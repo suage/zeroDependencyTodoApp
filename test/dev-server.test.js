@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { createStaticServer } from '../server.js';
+import { createStaticServer } from '../dev-server.js';
 
 const SRC_DIR = fileURLToPath(new URL('../src', import.meta.url));
 const SECRET = 'top-secret-outside-of-root';
